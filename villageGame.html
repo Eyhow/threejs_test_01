@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Dream Village - Three.js Prototype</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+    <body>
+    <div id="crt">
+        <div id="container" style="position: relative;"></div> <!-- ← Only one now -->
+        <canvas id="blinkCanvas" style="position: absolute; top: 0; left: 0; pointer-events: none;"></canvas>
+        <canvas id="screenLinesCanvas" style="position: fixed; top: 0; left: 0; pointer-events: none; z-index: 9998;"></canvas>
+        <div id="movementHint">Use arrows or ZQSD to move - Press ESCAPE to leave</div>
+    </div>
+
+    <div id="visualEffects">
+    <div id="grainOverlay"></div>
+    <div id="glitchLayer"></div>
+    <div id="glitchOverlay"></div>
+    <div id="rgbGlitch">
+        <div id="rgbRed"></div>
+        <div id="rgbGreen"></div>
+        <div id="rgbBlue"></div>
+    </div>
+    </div>
+
+    <div id="vignette"></div>
+
+    <div id="welcomeMenu" style="
+        position: fixed;
+        inset: 0;
+        color: white;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        font-family: 'Arial Black', Gadget, sans-serif;
+        font-size: 3rem;
+        z-index: 9999;
+    ">
+        <div style="margin-bottom: 2rem;">WELCOME</div>
+        <button id="startButton" style="
+        font-size: 2rem;
+        padding: 1rem 3rem;
+        cursor: pointer;
+        background: #000000;
+        border: none;
+        border-radius: 10px;
+        font-weight: bold;
+        color: #ffffff;
+        transition: background 0.3s ease;
+        ">START</button>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+    <script src="https://unpkg.com/three@0.160.0/examples/js/postprocessing/EffectComposer.js"></script>
+    <script src="https://unpkg.com/three@0.160.0/examples/js/postprocessing/RenderPass.js"></script>
+    <script src="https://unpkg.com/three@0.160.0/examples/js/postprocessing/ShaderPass.js"></script>
+    <script src="js/main.js"></script>
+    </body>
+
+</html>
