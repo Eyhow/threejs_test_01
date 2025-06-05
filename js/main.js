@@ -5,6 +5,10 @@ let scene, camera, renderer;
 
 const flowerGroup = new THREE.Group();
 
+let isMouseDown = false;
+let prevMouseX = 0;
+const mouseSensitivity = 0.002;
+
 let moveForward = false;
 let nextTeleportTime = 0;
 let teleportCooldown = 8000 + Math.random() * 8000; // 8–16s delay
@@ -32,7 +36,7 @@ const vertigoSpeed = 1.5;    // How fast the zoom oscillates
 const vertigoAmount = 1.2;   // How much FOV changes (degrees)
 const baseFov = 75;          // Normal FOV
 
-const bobbingSpeed = 15;     // how fast the bobbing cycles
+const bobbingSpeed = 18;     // how fast the bobbing cycles
 const bobbingAmount = 0.12;  // how much vertical movement
 const baseCameraHeight = 2;  // camera base height
 
@@ -76,9 +80,30 @@ function init() {
   camera = new THREE.PerspectiveCamera(baseFov, window.innerWidth/window.innerHeight, 0.1, 1000);
   camera.position.set(0, baseCameraHeight, 5);
   camera.rotation.order = 'YXZ';
+  initSounds(camera);
 
   renderer = new THREE.WebGLRenderer({antialias: true});
   renderer.outputColorSpace = THREE.SRGBColorSpace;
+
+    document.addEventListener('mousedown', (e) => {
+    if (!gameStarted) return;
+    isMouseDown = true;
+    prevMouseX = e.clientX;
+    });
+
+    document.addEventListener('mouseup', () => {
+    isMouseDown = false;
+    });
+
+    document.addEventListener('mousemove', (e) => {
+    if (!isMouseDown || !gameStarted) return;
+
+    const deltaX = e.clientX - prevMouseX;
+    prevMouseX = e.clientX;
+
+    camera.rotation.y -= deltaX * mouseSensitivity;
+    });
+
   
   // Enable shadows
   renderer.shadowMap.enabled = true;
@@ -392,6 +417,13 @@ function animate() {
     else isWalking = true;
   }
 
+    if (isWalking) {
+        if (!stepsSound.isPlaying) stepsSound.play();
+    } else {
+        if (stepsSound.isPlaying) stepsSound.stop();
+    }
+
+
   // Vertigo effect only when NOT walking and game started
   if (gameStarted && !isWalking) {
     vertigoTime += vertigoSpeed * 0.016; // assume ~60fps
@@ -478,7 +510,12 @@ function animate() {
     const minDist = 0.8;
     const clamped = Math.max(0, Math.min(1, (maxDist - distToPlayer) / (maxDist - minDist)));
     glitch.style.opacity = (clamped * 0.6).toFixed(3); // up to 40% opacity max
+    // Adjust static sound volume based on distance to NPC
+    const maxStaticVolume = 0.5; // You can try 1 for maximum
+    staticSound.setVolume(clamped * maxStaticVolume);
     }
+
+    
 
     maybeUpdateFlowers();
 
